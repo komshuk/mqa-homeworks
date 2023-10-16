@@ -24,52 +24,7 @@ class ChangeTextTest {
 
     private lateinit var device: UiDevice
     private val textToSet = "Netology"
-
-//    @Test
-//    fun testInternetSettings() {
-//        // Press home
-//        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-//        device.pressHome()
-//
-//        // Wait for launcher
-//        val launcherPackage = device.launcherPackageName
-//        device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
-//        waitForPackage(SETTINGS_PACKAGE)
-//
-//        val context = ApplicationProvider.getApplicationContext<Context>()
-//        val intent = context.packageManager.getLaunchIntentForPackage(SETTINGS_PACKAGE)
-//        context.startActivity(intent)
-//        device.wait(Until.hasObject(By.pkg(SETTINGS_PACKAGE)), TIMEOUT)
-//
-//        device.findObject(
-//            UiSelector().resourceId("android:id/title").instance(0)
-//        ).click()
-//    }
-
-//    @Test
-//    fun testChangeText() {
-//        // Press home
-//        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-//        device.pressHome()
-//
-//        // Wait for launcher
-//        val launcherPackage = device.launcherPackageName
-//        device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
-//        waitForPackage(SETTINGS_PACKAGE)
-//
-//        val context = ApplicationProvider.getApplicationContext<Context>()
-//        val packageName = context.packageName
-//        val intent = context.packageManager.getLaunchIntentForPackage(packageName)
-//        context.startActivity(intent)
-//        device.wait(Until.hasObject(By.pkg(packageName)), TIMEOUT)
-//
-//
-//        device.findObject(By.res(packageName, "userInput")).text = textToSet
-//        device.findObject(By.res(packageName, "buttonChange")).click()
-//
-//        val result = device.findObject(By.res(packageName, "textToBeChanged")).text
-//        assertEquals(result, textToSet)
-//    }
+    private val secondTextToSet = "Eureka"
 
     private fun waitForPackage(packageName: String) {
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -88,6 +43,7 @@ class ChangeTextTest {
         val launcherPackage = device.launcherPackageName
         device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
     }
+
 
     @Test
     fun testInternetSettings() {
@@ -110,7 +66,35 @@ class ChangeTextTest {
         assertEquals(result, textToSet)
     }
 
+    @Test
+    fun testEmptyText() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        device.findObject(By.res(packageName, "userInput")).text = textToSet
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        device.findObject(By.res(packageName, "userInput")).text = ""
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        val launcherPackage = device.launcherPackageName
+        device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
+
+        val result = device.findObject(By.res(packageName, "textToBeChanged")).text
+        assertEquals(result, textToSet)
+    }
+
+    @Test
+    fun testActivityButton() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        device.findObject(By.res(packageName, "userInput")).text = secondTextToSet
+        device.findObject(By.res(packageName, "buttonActivity")).click()
+        val launcherPackage = device.launcherPackageName
+        device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
+
+        val result = device.findObject(By.res(packageName, "text")).text
+        assertEquals(result, secondTextToSet)
+    }
 }
-
-
-
